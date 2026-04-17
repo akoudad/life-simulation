@@ -8,6 +8,7 @@ class World:
         self.height = WORLD_HEIGHT
         self.biome_map = self._generate_biomes()
         self.food = []
+        self.mushrooms=[]
         self.timestep = 0
 
     def _generate_biomes(self):
@@ -44,6 +45,32 @@ class World:
                 return True
         return False
 
+    def spawn_mushrooms(self):
+        if len(self.mushrooms) >= MAX_MUSHROOMS:
+            return
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.biome_map[y, x] != 0:  # forest only
+                    continue
+                if np.random.random() < MUSHROOM_SPAWN_CHANCE:
+                    too_close = any(
+                        abs(mx - x) < 3 and abs(my - y) < 3
+                        for mx, my in self.mushrooms
+                    )
+                    if not too_close:
+                        self.mushrooms.append((float(x), float(y)))
+                        if len(self.mushrooms) >= MAX_MUSHROOMS:
+                            return
+
+    def remove_mushroom(self, x, y, radius=1.5):
+        for i, (mx, my) in enumerate(self.mushrooms):
+            if abs(mx - x) < radius and abs(my - y) < radius:
+                self.mushrooms.pop(i)
+                return True
+        return False
+
+
     def step(self):
         self.spawn_food()
+        self.spawn_mushrooms()
         self.timestep += 1

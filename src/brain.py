@@ -27,7 +27,7 @@ class SharedBrain:
         x= torch.tensor(obs,dtype=torch.float32)
         raw= self.network(x)
         noise=torch.randn_like(raw)*0.1
-        action=torch.clamp(raw + noise,-1,0,1.0)
+        action=torch.clamp(raw + noise, -1.0, 1.0)
         log_prob=-0.5 * ((action - raw)**2).sum()
         return action.detach().numpy(), log_prob
     
@@ -56,7 +56,7 @@ class SharedBrain:
 
     def save(self):
         return {
-            "weights": {k: v.tolist() for k, v in self.network.state_disct().items()}
+            "weights": {k: v.tolist() for k, v in self.network.state_dict().items()}
         }
     def load(self,data):
         state_dict = {k:torch.tensor(v) for k , v in data ["weights"].items()}
