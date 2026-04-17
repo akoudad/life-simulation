@@ -2,11 +2,11 @@ WORLD_WIDTH = 128
 WORLD_HEIGHT = 128
 CELL_SIZE = 6
 
-BIOME_COLORS = {
-    0: (34, 85, 34),
-    1: (194, 178, 128),
-    2: (30, 60, 110),
-    3: (90, 90, 90),
+BIOME_COLORS = {      # CHANGED: richer palette
+    0: (38, 76, 42),    # deep forest
+    1: (203, 176, 123), # warm sand
+    2: (36, 72, 115),   # ocean
+    3: (100, 96, 92),   # stone
 }
 
 BIOME_FOOD_RATES = {
@@ -61,7 +61,7 @@ MAX_FOOD = 800
 
 FPS = 30
 WINDOW_TITLE = "Life Simulation"
-STATS_HEIGHT = 40
+STATS_HEIGHT = 64   # CHANGED: taller for pro layout + sparkline
 
 #mushrooms 
 MAX_MUSHROOMS = 5
@@ -72,6 +72,7 @@ IQ_MUTATION_STD   = 0.05
 
 HALLUCINATION_STEPS        = 100
 HALLUCINATION_ENERGY_DRAIN = 0.3   # extra per step
+MUSHROOM_COOLDOWN          = 300   # steps between safe doses
 
 
 #brain

@@ -65,6 +65,7 @@ def save_state(world, creatures, brain):
             "reproduction_cooldown": c.reproduction_cooldown,
             "iq": c.iq,
             "hallucination_steps": c.hallucination_steps,
+            "mushroom_cooldown": c.mushroom_cooldown,   # NEW
         })
 
     with open(SAVE_FILE, "w") as f:
@@ -88,7 +89,8 @@ def load_state(brain):
     for cd in state["creatures"]:
         c = Creature(cd["x"], cd["y"], traits=cd["traits"],
                      parent1_id=cd["parent1_id"], parent2_id=cd["parent2_id"],iq=cd.get("iq",0.0))
-        c.hallucination_steps=cd.get("hallucination_steps",0)
+        c.hallucination_steps = cd.get("hallucination_steps", 0)
+        c.mushroom_cooldown = cd.get("mushroom_cooldown", 0)   # NEW
         c.id = cd["id"]
         c.energy = cd["energy"]
         c.age = cd["age"]

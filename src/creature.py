@@ -18,6 +18,7 @@ class Creature:
         self.reproduction_cooldown = 0
         self.iq = float(np.clip(iq, 0.0, 1.0))
         self.hallucination_steps = 0
+        self.mushroom_cooldown = 0   # NEW: safe-dose cooldown
         self.brain_log_prob = None
         if traits is None:
             self.traits = self._random_traits()
@@ -89,10 +90,12 @@ class Creature:
     
     def eat_mushroom(self, world):
         if world.remove_mushroom(self.x, self.y):
-            if self.iq == 0.0:
+            # CHANGED: overdose model — safe if cooldown passed AND iq<1.0
+            if self.mushroom_cooldown == 0 and self.iq < 1.0:
                 self.iq = min(1.0, self.iq + MUSHROOM_IQ_BOOST)
+                self.mushroom_cooldown = MUSHROOM_COOLDOWN
             else:
-                # already has IQ — hallucinate instead
+                # overdose: too soon OR already maxed
                 self.hallucination_steps += HALLUCINATION_STEPS
             return True
         return False
@@ -126,8 +129,10 @@ class Creature:
 
         if self.reproduction_cooldown > 0:
             self.reproduction_cooldown -= 1
-        if self.hallucination_steps > 0:           # NEW: count down hallucination
+        if self.hallucination_steps > 0:           # count down hallucination
             self.hallucination_steps -= 1
+        if self.mushroom_cooldown > 0:             # NEW: tick mushroom cooldown
+            self.mushroom_cooldown -= 1
 
         # NEW: richer reward signal replacing simple energy delta
         if self.iq > 0 and brain is not None:
